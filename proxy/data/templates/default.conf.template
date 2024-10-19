@@ -1,0 +1,30 @@
+resolver 1.1.1.1 8.8.4.4 valid=300s;
+resolver_timeout 5s;
+
+# Extract subdomain from $host
+map $host $subdomain {
+    ~^(?<sub>.+)\.localhost$ $sub;
+    default                 "";
+}
+
+# Define the upstream host based on the subdomain
+map $subdomain $upstream_host {
+    default $subdomain.${CUSTOM_URL_AWS};
+    ""      ${CUSTOM_URL_AWS};
+}
+
+server {
+  listen 80;
+  server_name ~^(?:(?<subdomain>.+)\.)?localhost$;
+
+  location / {
+    proxy_pass https://$upstream_host;
+
+    # Add Basic Authentication header
+    proxy_set_header Authorization "Basic ${CUSTOM_CRED_BASIC_AUTH}";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}

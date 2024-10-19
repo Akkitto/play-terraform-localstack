@@ -1,0 +1,12 @@
+services:
+  nginx:
+    image: nginx:1.27.2-alpine3.20
+    ports:
+      - 59385:443
+      - 59383:80
+    volumes:
+      - ./data/templates:/etc/nginx/templates:ro
+    environment:
+      - NGINX_HOST=localhost
+      - CUSTOM_CRED_BASIC_AUTH=<BASE64_ENCODED_BASIC_AUTH_TOKE> # Example: eW91ci11c2VybmFtZTpteS1wYXNzd29yZA== (encode through Base64)
+      - CUSTOM_URL_AWS=<BASE_URL_AWS_BACKEND>                   # Example: aws.domain.tld (omit https://)
