@@ -42,3 +42,6 @@ terraform.rc
 # Ignore validation lock file
 # https://discuss.hashicorp.com/t/what-is-the-best-practise-with-terraform-lock-hcl-in-modules-commit-or-not/28648/2
 .terraform.lock.hcl
+
+# Ignore Dockerfile filled templates
+proxy/.env
